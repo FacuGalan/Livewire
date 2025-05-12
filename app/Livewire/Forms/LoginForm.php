@@ -4,6 +4,7 @@ namespace App\Livewire\Forms;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -29,26 +30,59 @@ class LoginForm extends Form
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
+  public function authenticate(): void
+{
+    $this->ensureIsNotRateLimited();
 
-        // Modificado para incluir los tres campos en la autenticación
-        if (! Auth::attempt([
-            'email' => $this->email,
-            'user' => $this->user,
-            'password' => $this->password
-        ], $this->remember)) {
-            RateLimiter::hit($this->throttleKey());
+    // Primero, buscar al usuario por email y usuario
+    $user = \App\Models\User::where('email', $this->email)
+                           ->where('user', $this->user)
+                           ->first();
 
-            throw ValidationException::withMessages([
-                'form.email' => trans('auth.failed'),
-            ]);
+    // Si no se encuentra el usuario o la contraseña no coincide
+    if (!$user || !\Illuminate\Support\Facades\Hash::check($this->password, $user->password)) {
+        RateLimiter::hit($this->throttleKey());
+
+        // Determinamos qué campos tienen error
+        $errors = [];
+        
+        if (!$user) {
+            // Si no encontramos al usuario, pueden ser el email o el nombre de usuario
+            $emailExists = \App\Models\User::where('email', $this->email)->exists();
+            $userExists = \App\Models\User::where('user', $this->user)->exists();
+            
+            if (!$emailExists) {
+                $errors['form.email'] = trans('El correo electrónico no está registrado');
+            }
+            
+            if (!$userExists) {
+                $errors['form.user'] = trans('El nombre de usuario no está registrado');
+            }
+            
+            // Si ambos existen pero no juntos
+            if ($emailExists && $userExists) {
+                $errors['form.email'] = trans('El correo y usuario no coinciden con ninguna cuenta');
+            }
+        } else {
+            // El usuario existe pero la contraseña es incorrecta
+            $errors['form.password'] = trans('La contraseña es incorrecta');
         }
-
-        RateLimiter::clear($this->throttleKey());
+        
+        // Si no se determinó ningún error específico, mostrar un mensaje genérico
+        if (empty($errors)) {
+            $errors['form.email'] = trans('Las credenciales proporcionadas no son correctas');
+        }
+        
+        throw ValidationException::withMessages($errors);
     }
 
+    // Si llegamos aquí, las credenciales son correctas
+    Auth::login($user, $this->remember);
+    RateLimiter::clear($this->throttleKey());
+
+    // Regenerar la sesión para evitar ataques de session fixation
+    Session::regenerate();
+}
     /**
      * Ensure the authentication request is not rate limited.
      */
