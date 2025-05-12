@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Livewire\Livewire;
+use App\Livewire\Layout\DynamicNavigation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        Livewire::component('layout.dynamic-navigation', DynamicNavigation::class);
     }
 }
