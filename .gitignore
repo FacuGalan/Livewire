@@ -1,0 +1,29 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración de entorno local
+.env
+config.php
+
+# Carpetas de dependencias
+vendor/
+node_modules/
+
+# Archivos de caché y temporales
+*.log
+*.cache
+*.tmp
+temp/
+tmp/
+cache/
+
+# Archivos de base de datos
+*.sql
+*.sqlite
+
+# Ignorar configuraciones específicas de IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
