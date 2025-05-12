@@ -28,19 +28,41 @@ new #[Layout('layouts.guest')] class extends Component
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <form wire:submit="login">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="email" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
-        </div>
+        <form wire:submit="login" id="loginForm" autocomplete="on">
 
-        <!-- Username -->
-        <div class="mt-4">
-            <x-input-label for="user" :value="__('Nombre de Usuario')" />
-            <x-text-input wire:model="form.user" id="user" class="block mt-1 w-full" type="text" name="user" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.user')" class="mt-2" />
+        <!-- Al inicio del formulario -->
+        <input type="hidden" name="credential_type" autocomplete="on" style="display:none" />
+
+        <div class="login-credential-group">
+            <!-- Email Address -->
+            <div>
+                <x-input-label for="email" :value="__('Correo Electrónico')" />
+                <x-text-input 
+                    wire:model="form.email" 
+                    id="email" 
+                    class="block mt-1 w-full" 
+                    type="email" 
+                    name="email" 
+                    required 
+                    autocomplete="email"
+                />
+                <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
+            </div>
+
+            <!-- Username -->
+            <div class="mt-4">
+                <x-input-label for="user" :value="__('Nombre de Usuario')" />
+                <x-text-input 
+                    wire:model="form.user" 
+                    id="user" 
+                    class="block mt-1 w-full" 
+                    type="text" 
+                    name="user" 
+                    required 
+                    autocomplete="username"
+                />
+                <x-input-error :messages="$errors->get('form.user')" class="mt-2" />
+            </div>
         </div>
 
         <!-- Password -->
