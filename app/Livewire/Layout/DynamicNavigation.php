@@ -14,6 +14,13 @@ class DynamicNavigation extends Component
     public $dropdownStates = [];
     public $menuItems = [];
     public $debugInfo = [];
+    public $selectedMenu = null; // Añadimos esta propiedad
+
+    // Asegurarnos de que se preserva el estado entre las renderizaciones
+    protected $preserveState = true;
+    
+    // Escuchar eventos para mantener sincronizado el menú seleccionado
+    protected $listeners = ['menuWasSelected' => 'updateSelectedMenu'];
     
     public function mount()
     {
@@ -113,6 +120,20 @@ class DynamicNavigation extends Component
         
         $this->dropdownStates[$menu] = !$this->dropdownStates[$menu];
         $this->dispatch('dropdownToggled', $menu);
+    }
+    
+    // Método para seleccionar un menú principal y enviar evento
+    public function selectMenu($codigo)
+    {
+        $this->selectedMenu = $codigo;
+        // Emitir un evento para que el dashboard pueda reaccionar
+        $this->dispatch('menuSelected', $codigo);
+    }
+    
+    // Método para actualizar el menú seleccionado (usado para sincronización)
+    public function updateSelectedMenu($menuCode)
+    {
+        $this->selectedMenu = $menuCode;
     }
     
     /**

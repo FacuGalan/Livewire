@@ -1,0 +1,46 @@
+.submenu-container {
+    width: 100% !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.submenu-items {
+    display: flex;
+    align-items: center;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    overflow-x: auto;
+}
+
+.submenu-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    white-space: nowrap;
+    text-decoration: none !important;
+    transition: all 150ms ease-in-out;
+    /* Añadimos margen a la derecha para espaciado entre ítems */
+    margin-right: 50px;
+}
+
+/* Añadimos un separador vertical entre ítems */
+.submenu-item:not(:last-child)::after {
+    content: "";
+    position: relative;
+    right: -8px;
+    display: inline-block;
+    height: 16px;
+    border-right: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.submenu-item:hover {
+    color: #4b5563;
+}
+
+.submenu-item i {
+    margin-right: 0.25rem;
+    color: #6366f1;
+}
