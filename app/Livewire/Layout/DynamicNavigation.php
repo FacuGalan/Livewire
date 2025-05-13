@@ -14,22 +14,10 @@ class DynamicNavigation extends Component
     public $dropdownStates = [];
     public $menuItems = [];
     public $debugInfo = [];
-    public $currentTitle = 'Inicio';
     
     public function mount()
     {
         $this->loadMenu();
-    }
-
-    public function setCurrentTitle($title)
-    {
-        $this->currentTitle = $title;
-        
-        // Emitir un evento para Alpine.js a través de window
-        $this->dispatch('title-changed', title: $title);
-        
-        // También podemos emitir un evento de navegador para asegurarnos de que funciona
-        $this->dispatchBrowserEvent('title-changed', ['title' => $title]);
     }
     
     private function loadMenu()

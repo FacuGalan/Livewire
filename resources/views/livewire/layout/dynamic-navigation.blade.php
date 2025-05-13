@@ -53,7 +53,6 @@
                                             @foreach ($item->children as $child)
                                                 <a 
                                                     href="#{{ $child->codigo }}" 
-                                                    wire:click.prevent="setCurrentTitle('{{ $child->etiqueta }}')"
                                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                     title="{{ $child->detalle }}"
                                                 >
@@ -168,7 +167,6 @@
                                 @foreach ($item->children as $child)
                                     <a 
                                         href="#{{ $child->codigo }}" 
-                                        wire:click.prevent="setCurrentTitle('{{ $child->etiqueta }}')"
                                         class="block py-2 pl-4 pr-4 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                                         title="{{ $child->detalle }}"
                                     >
