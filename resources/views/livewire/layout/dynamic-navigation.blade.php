@@ -17,12 +17,9 @@
                     <!-- Menús principales (sin submenús desplegables) -->
                     @foreach ($menuItems as $item)
                         <a 
-                            href="#{{ $item->codigo }}" 
+                            href="{{ request()->url() }}?menu={{ $item->codigo }}" 
                             wire:click.prevent="selectMenu('{{ $item->codigo }}')"
-                            @click="selectedMenuCode = '{{ $item->codigo }}'"
-                            class="menu-item px-3 py-2 text-sm font-medium border-b-2 focus:outline-none transition duration-150 ease-in-out"
-                            :class="selectedMenuCode === '{{ $item->codigo }}' ? 'text-indigo-600 border-indigo-400' : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'"
-                            data-menu-code="{{ $item->codigo }}"
+                            class="menu-item px-3 py-2 text-sm font-medium border-b-2 focus:outline-none transition duration-150 ease-in-out {{ $selectedMenu === $item->codigo ? 'text-indigo-600 border-indigo-400' : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300' }}"
                             title="{{ $item->detalle }}"
                         >
                             @if ($item->recurso)
@@ -142,6 +139,42 @@
 </nav>
 
 <script>
+    document.addEventListener('livewire:initialized', function () {
+        Livewire.on('urlUpdate', function (params) {
+            // Actualizamos la URL sin recargar la página usando History API
+            if (params.url) {
+                window.history.pushState({}, '', params.url);
+            }
+        });
+        
+        // Capturar los clics en enlaces con wire:navigate para preservar el estado
+        document.addEventListener('click', function(e) {
+            let target = e.target;
+            
+            // Buscar el elemento <a> si el clic fue en un hijo
+            while (target && target.tagName !== 'A') {
+                target = target.parentElement;
+            }
+            
+            // Si es un enlace con wire:navigate, preservar los parámetros de menú
+            if (target && target.hasAttribute('wire:navigate')) {
+                const url = new URL(target.href);
+                const currentUrl = new URL(window.location.href);
+                
+                // Conservar los parámetros de menú si no están ya en la URL destino
+                if (!url.searchParams.has('menu') && currentUrl.searchParams.has('menu')) {
+                    url.searchParams.set('menu', currentUrl.searchParams.get('menu'));
+                }
+                
+                if (!url.searchParams.has('submenu') && currentUrl.searchParams.has('submenu')) {
+                    url.searchParams.set('submenu', currentUrl.searchParams.get('submenu'));
+                }
+                
+                // Actualizar el href con los parámetros preservados
+                target.href = url.toString();
+            }
+        }, true);
+    });
     // Escuchar eventos de Livewire
     document.addEventListener('livewire:initialized', function() {
         Livewire.on('menuSelected', function(menuCode) {

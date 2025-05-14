@@ -168,6 +168,23 @@ class Departamentos extends Component
         try {
             DB::beginTransaction();
             
+            // Lista de campos de íconos que queremos contar
+            $iconFields = [
+                'lVendido', 'lPromo', 'lNuevo', 'lVegetariano', 
+                'lTacc', 'lVegano', 'lLactosa', 'lKosher', 'lFrutos'
+            ];
+            
+            // Contar cuántos están en true
+            $iconsCount = 0;
+            foreach ($iconFields as $field) {
+                if (isset($this->depto[$field]) && $this->depto[$field] === true) {
+                    $iconsCount++;
+                }
+            }
+            
+            // Asignar el conteo al campo cantidad_iconos
+            $this->depto['cantidad_iconos'] = $iconsCount;
+            
             if ($this->isEditing) {
                 $depto = Depto::findOrFail($this->depto['codigo']);
                 $depto->update($this->depto);

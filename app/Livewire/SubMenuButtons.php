@@ -14,6 +14,39 @@ class SubMenuButtons extends Component
     public $menuTitle = '';
     
     protected $listeners = ['menuSelected' => 'loadSubMenus'];
+
+    public $activeSubMenu = null;
+
+    public function mount()
+    {
+        // Obtener el menú seleccionado de la URL si existe
+        $this->selectedMenu = request()->query('menu');
+        $this->activeSubMenu = request()->query('submenu');
+        
+        // Si hay un menú seleccionado, cargar sus submenús
+        if ($this->selectedMenu) {
+            $this->loadSubMenus($this->selectedMenu);
+        }
+    }
+
+    public function selectSubMenu($codigo, $route = null)
+    {
+        $this->activeSubMenu = $codigo;
+        
+        if ($route) {
+            // No necesitamos redireccionar explícitamente, wire:navigate se encargará
+            $this->dispatch('urlUpdate', [
+                'url' => route($route, ['menu' => $this->selectedMenu, 'submenu' => $codigo])
+            ]);
+            return null;
+        } else {
+            // Solo actualizar la URL sin navegar
+            $this->dispatch('urlUpdate', [
+                'url' => request()->url() . '?menu=' . $this->selectedMenu . '&submenu=' . $codigo
+            ]);
+        }
+    }
+
     
     public function loadSubMenus($menuCode)
     {

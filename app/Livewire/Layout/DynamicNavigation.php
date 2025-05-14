@@ -24,7 +24,15 @@ class DynamicNavigation extends Component
     
     public function mount()
     {
+        // Obtener el menú seleccionado de la URL si existe
+        $this->selectedMenu = request()->query('menu');
+        
         $this->loadMenu();
+        
+        // Si hay un menú seleccionado en la URL, emitir evento para cargar submenu
+        if ($this->selectedMenu) {
+            $this->dispatch('menuSelected', $this->selectedMenu);
+        }
     }
     
     private function loadMenu()
@@ -126,8 +134,15 @@ class DynamicNavigation extends Component
     public function selectMenu($codigo)
     {
         $this->selectedMenu = $codigo;
+        
         // Emitir un evento para que el dashboard pueda reaccionar
         $this->dispatch('menuSelected', $codigo);
+        
+        // En lugar de redireccionar, solo actualizar la URL
+        // Usamos JavaScript para actualizar la URL sin hacer un refresh completo
+        $this->dispatch('urlUpdate', [
+            'url' => request()->url() . '?menu=' . $codigo
+        ]);
     }
     
     // Método para actualizar el menú seleccionado (usado para sincronización)

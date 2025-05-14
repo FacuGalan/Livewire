@@ -106,8 +106,8 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         @if($depto->visible)
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                <i class="fas fa-check mr-1"></i> Sí
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 ">
+                                                <i class="fas fa-check mr-1 mt-1"></i> Sí
                                             </span>
                                         @else
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
@@ -199,13 +199,20 @@
                                             @error('depto.descuento') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                         </div>
 
+                                        <div class="col-span-1 md:col-span-2 border-t border-gray-200 ">
+                                            <h4 class="text-lg leading-6 font-medium text-gray-900 pt-2 mt-2" >
+                                                Disponible para
+                                            </h4>
+                                        </div>
+
                                         <!-- Opciones booleanas - Primera columna -->
-                                        <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-200 pt-4 mt-4">
+                                        <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 " >
+                                            
                                             <div>
-                                                <div class="flex items-center h-5 mb-4">
+                                                <!--div class="flex items-center h-5 mb-4">
                                                     <input type="checkbox" wire:model="depto.visible" id="visible" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                                                     <label for="visible" class="ml-3 block text-sm font-medium text-gray-700">Visible</label>
-                                                </div>
+                                                </div-->
 
                                                 <div class="flex items-center h-5 mb-4">
                                                     <input type="checkbox" wire:model="depto.lMesas" id="lMesas" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
@@ -217,10 +224,6 @@
                                                     <label for="lMostrador" class="ml-3 block text-sm font-medium text-gray-700">Mostrador</label>
                                                 </div>
                                                 
-                                                <div class="flex items-center h-5 mb-4">
-                                                    <input type="checkbox" wire:model="depto.lPOS" id="lPOS" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                                    <label for="lPOS" class="ml-3 block text-sm font-medium text-gray-700">POS</label>
-                                                </div>
                                             </div>
 
                                             <!-- Opciones booleanas - Segunda columna -->
@@ -231,6 +234,15 @@
                                                 </div>
 
                                                 <div class="flex items-center h-5 mb-4">
+                                                    <input type="checkbox" wire:model="depto.lPOS" id="lPOS" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                    <label for="lPOS" class="ml-3 block text-sm font-medium text-gray-700">POS</label>
+                                                </div>
+  
+                                            </div>
+
+                                            <!-- Opciones booleanas - Tercera columna -->
+                                            <div>
+                                                <div class="flex items-center h-5 mb-4">
                                                     <input type="checkbox" wire:model="depto.lWeb" id="lWeb" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                                                     <label for="lWeb" class="ml-3 block text-sm font-medium text-gray-700">Web</label>
                                                 </div>
@@ -238,36 +250,8 @@
                                                 <div class="flex items-center h-5 mb-4">
                                                     <input type="checkbox" wire:model="depto.lCarDig" id="lCarDig" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                                                     <label for="lCarDig" class="ml-3 block text-sm font-medium text-gray-700">Carta Digital</label>
-                                                </div>
+                                                </div>     
                                                 
-                                                <div class="flex items-center h-5 mb-4">
-                                                    <input type="checkbox" wire:model="depto.lVendido" id="lVendido" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                                    <label for="lVendido" class="ml-3 block text-sm font-medium text-gray-700">Vendido</label>
-                                                </div>
-                                            </div>
-
-                                            <!-- Opciones booleanas - Tercera columna -->
-                                            <div>
-                                                <div class="flex items-center h-5 mb-4">
-                                                    <input type="checkbox" wire:model="depto.lPromo" id="lPromo" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                                    <label for="lPromo" class="ml-3 block text-sm font-medium text-gray-700">Promoción</label>
-                                                </div>
-                                                
-                                                <div class="flex items-center h-5 mb-4">
-                                                    <input type="checkbox" wire:model="depto.lNuevo" id="lNuevo" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                                    <label for="lNuevo" class="ml-3 block text-sm font-medium text-gray-700">Nuevo</label>
-                                                </div>
-
-                                                <div class="flex items-center h-5 mb-4">
-                                                    <input type="checkbox" wire:model="depto.lVegetariano" id="lVegetariano" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                                    <label for="lVegetariano" class="ml-3 block text-sm font-medium text-gray-700">Vegetariano</label>
-                                                </div>
-                                                
-                                                <div class="flex items-center h-5 mb-4">
-                                                    <input type="checkbox" wire:model="depto.lTacc" id="lTacc" class<div class="flex items-center h-5 mb-4">
-                                                    <input type="checkbox" wire:model="depto.lTacc" id="lTacc" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                                    <label for="lTacc" class="ml-3 block text-sm font-medium text-gray-700">Sin TACC</label>
-                                                </div>
                                             </div>
                                         </div>
 
@@ -278,8 +262,22 @@
                                             </button>
                                         </div>
 
+                                        <div class="col-span-1 md:col-span-2 border-t border-gray-200 " 
+                                         x-data="{ show: false }" 
+                                             x-on:toggle-advanced-options.window="show = !show"
+                                             x-show="show"
+                                             x-transition:enter="transition ease-out duration-300"
+                                             x-transition:enter-start="opacity-0 transform scale-95"
+                                             x-transition:enter-end="opacity-100 transform scale-100"
+                                             x-transition:leave="transition ease-in duration-200"
+                                             x-transition:leave-start="opacity-100 transform scale-100"
+                                             x-transition:leave-end="opacity-0 transform scale-95">
+                                            <h4 class="text-lg leading-6 font-medium text-gray-900 pt-2 mt-2" >
+                                                Etiquetas
+                                            </h4>
+                                        </div>
                                         <!-- Opciones avanzadas - Contenido -->
-                                        <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-200 pt-4 mt-2" 
+                                        <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 " 
                                              x-data="{ show: false }" 
                                              x-on:toggle-advanced-options.window="show = !show"
                                              x-show="show"
@@ -289,6 +287,7 @@
                                              x-transition:leave="transition ease-in duration-200"
                                              x-transition:leave-start="opacity-100 transform scale-100"
                                              x-transition:leave-end="opacity-0 transform scale-95">
+
                                             <!-- Primera columna de opciones avanzadas -->
                                             <div>
                                                 <div class="flex items-center h-5 mb-4">
@@ -299,6 +298,11 @@
                                                 <div class="flex items-center h-5 mb-4">
                                                     <input type="checkbox" wire:model="depto.lLactosa" id="lLactosa" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                                                     <label for="lLactosa" class="ml-3 block text-sm font-medium text-gray-700">Sin Lactosa</label>
+                                                </div>
+
+                                                <div class="flex items-center h-5 mb-4">
+                                                    <input type="checkbox" wire:model="depto.lVendido" id="lVendido" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                    <label for="lVendido" class="ml-3 block text-sm font-medium text-gray-700">Más Vendido</label>
                                                 </div>
                                             </div>
 
@@ -313,13 +317,31 @@
                                                     <input type="checkbox" wire:model="depto.lFrutos" id="lFrutos" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                                                     <label for="lFrutos" class="ml-3 block text-sm font-medium text-gray-700">Sin Frutos Secos</label>
                                                 </div>
+
+                                                <div class="flex items-center h-5 mb-4">
+                                                    <input type="checkbox" wire:model="depto.lVegetariano" id="lVegetariano" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                    <label for="lVegetariano" class="ml-3 block text-sm font-medium text-gray-700">Vegetariano</label>
+                                                </div>
                                             </div>
 
                                             <!-- Tercera columna de opciones avanzadas -->
                                             <div>
-                                                <label for="cantidad_iconos" class="block text-sm font-medium text-gray-700">Cantidad de Iconos</label>
-                                                <input type="number" wire:model="depto.cantidad_iconos" id="cantidad_iconos" min="0" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                                @error('depto.cantidad_iconos') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                                <div class="flex items-center h-5 mb-4">
+                                                    <input type="checkbox" wire:model="depto.lPromo" id="lPromo" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                    <label for="lPromo" class="ml-3 block text-sm font-medium text-gray-700">Promoción</label>
+                                                </div>
+                                                
+                                                <div class="flex items-center h-5 mb-4">
+                                                    <input type="checkbox" wire:model="depto.lNuevo" id="lNuevo" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                    <label for="lNuevo" class="ml-3 block text-sm font-medium text-gray-700">Nuevo</label>
+                                                </div>
+
+                                                
+                                                <div class="flex items-center h-5 mb-4">
+                                                    <input type="checkbox" wire:model="depto.lTacc" id="lTacc" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                    <label for="lTacc" class="ml-3 block text-sm font-medium text-gray-700">Sin TACC</label>
+                                                </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
