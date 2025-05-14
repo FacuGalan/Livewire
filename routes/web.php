@@ -12,4 +12,9 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+// Ruta para el componente de departamentos
+Route::get('departamentos', function () {
+    return view('departamentos');
+})->middleware(['auth'])->name('departamentos');
+
 require __DIR__.'/auth.php';
