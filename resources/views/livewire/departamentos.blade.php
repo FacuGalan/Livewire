@@ -171,12 +171,67 @@
                                             @error('depto.resumido') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                         </div>
 
-                                        <!-- IVA -->
+                                        <!-- IVA con búsqueda - Versión mejorada -->
+                                        <!-- IVA con búsqueda - Versión mejorada final -->
                                         <div>
-                                            <label for="iva" class="block text-sm font-medium text-gray-700">IVA</label>
-                                            <input type="number" wire:model="depto.iva" id="iva" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                            @error('depto.iva') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                        <label for="iva" class="block text-sm font-medium text-gray-700">IVA</label>
+                                        <div class="relative mt-1">
+                                            @if($selectedIvaName)
+                                                <div class="relative">
+                                                    <!-- Cuando hay un valor seleccionado, usamos un div en lugar de un input -->
+                                                    <div class="mt-1 block w-full px-3 py-2 sm:text-sm border border-gray-300 rounded-md bg-gray-50">
+                                                        <span class="text-gray-900 font-medium">{{ $selectedIvaName }}</span>
+                                                    </div>
+                                                    
+                                                    <!-- Botón para limpiar la selección -->
+                                                    <button 
+                                                        type="button" 
+                                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                        wire:click="clearIvaSelection"
+                                                    >
+                                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            @else
+                                                <!-- Solo mostramos el input cuando no hay valor seleccionado -->
+                                                <input 
+                                                    type="text" 
+                                                    wire:model.live.debounce.300ms="searchIva"
+                                                    wire:focus="showIvaOptions" 
+                                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder="Buscar IVA por nombre o tasa..."
+                                                    autocomplete="off"
+                                                >
+                                            @endif
+                                            
+                                            @if($showIvaDropdown && count($ivas) > 0)
+                                                <div class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-300">
+                                                    <ul class="max-h-48 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                                                        @foreach($ivas as $iva)
+                                                            <li 
+                                                                wire:click="selectIva({{ $iva->codigo }}, '{{ $iva->nombre }}')" 
+                                                                class="cursor-pointer hover:bg-indigo-50 px-4 py-2 flex justify-between items-center"
+                                                            >
+                                                                <span class="font-medium">{{ $iva->nombre }}</span>
+                                                                <span class="text-indigo-600 font-semibold">{{ $iva->tasa }}%</span>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @elseif($showIvaDropdown && count($ivas) == 0 && !$selectedIvaName)
+                                                <div class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-300">
+                                                    <div class="py-3 px-4 text-sm text-gray-500">
+                                                        No se encontraron resultados para "{{ $searchIva }}"
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            
+                                            <input type="hidden" wire:model="depto.iva">
                                         </div>
+                                        @error('depto.iva') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                                    </div>
 
                                         <!-- Icono -->
                                         <div>

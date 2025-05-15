@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Depto;
+use App\Models\Iva; 
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class Departamentos extends Component
     public $perPage = 10;
     
     // Datos del formulario
-    public $depto = [
+     public $depto = [
         'codigo' => null,
         'nombre' => '',
         'resumido' => '',
@@ -48,6 +49,12 @@ class Departamentos extends Component
         'lFrutos' => false,
         'cantidad_iconos' => 0,
     ];
+
+    // Propiedades nuevas para la búsqueda de IVA
+    public $searchIva = '';
+    public $ivas = [];
+    public $showIvaDropdown = false;
+    public $selectedIvaName = '';
     
     public $deptoIdToDelete;
 
@@ -99,6 +106,52 @@ class Departamentos extends Component
         'depto.descuento.max' => 'El descuento no puede ser mayor a 100.',
     ];
 
+    // Cargar IVAs filtrados al escribir en el campo de búsqueda
+    public function updatedSearchIva()
+    {
+        if (empty($this->searchIva) && !$this->selectedIvaName) {
+            // Si el campo está vacío y no hay selección, mostrar todos los IVA (limitado a 10 registros)
+            $this->ivas = Iva::orderBy('nombre')->take(10)->get();
+            $this->showIvaDropdown = true;
+        } else if (strlen($this->searchIva) >= 1) {
+            // Si hay texto de búsqueda, filtrar los resultados
+            $this->ivas = Iva::where('nombre', 'like', '%' . $this->searchIva . '%')
+                ->orWhere('tasa', 'like', '%' . $this->searchIva . '%')
+                ->take(10)
+                ->get();
+            
+            $this->showIvaDropdown = true;
+        } else {
+            // Ocultar el dropdown si hay un valor seleccionado y el campo está vacío
+            $this->showIvaDropdown = false;
+        }
+    }
+
+    public function showIvaOptions()
+    {
+        if (!$this->selectedIvaName) {
+            $this->ivas = Iva::orderBy('nombre')->take(10)->get();
+            $this->showIvaDropdown = true;
+        }
+    }
+
+    // Seleccionar un IVA de la lista
+    public function selectIva($codigo, $nombre)
+    {
+        $this->depto['iva'] = $codigo;
+        $this->selectedIvaName = $nombre;
+        $this->searchIva = '';
+        $this->showIvaDropdown = false;
+    }
+
+    public function clearIvaSelection()
+    {
+        $this->depto['iva'] = null;
+        $this->selectedIvaName = '';
+        $this->searchIva = '';
+        $this->showIvaOptions();
+    }
+
     // Resetear la paginación cuando se busca
     public function updatingSearch()
     {
@@ -120,7 +173,7 @@ class Departamentos extends Component
     // Abrir modal para crear departamento
     public function createDepto()
     {
-        $this->reset(['depto', 'isEditing']);
+        $this->reset(['depto', 'isEditing', 'selectedIvaName', 'searchIva']);
         $this->depto = [
             'codigo' => null,
             'nombre' => '',
@@ -157,6 +210,15 @@ class Departamentos extends Component
         $this->isEditing = true;
         $deptoToEdit = Depto::findOrFail($id);
         $this->depto = $deptoToEdit->toArray();
+        
+        // Cargar el nombre del IVA si existe
+        if ($this->depto['iva']) {
+            $iva = Iva::find($this->depto['iva']);
+            if ($iva) {
+                $this->selectedIvaName = $iva->nombre;
+            }
+        }
+        
         $this->showModalForm = true;
     }
 
@@ -255,6 +317,8 @@ class Departamentos extends Component
     {
         $this->showModalForm = false;
         $this->confirmingDeletion = false;
+        $this->searchIva = '';
+        $this->showIvaDropdown = false;
     }
 
     // Renderizar componente

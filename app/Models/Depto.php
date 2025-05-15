@@ -86,4 +86,12 @@ class Depto extends Model
     {
         return $this->hasMany(Articulo::class, 'depto', 'codigo');
     }
+
+    /**
+     * Obtener el IVA asociado con este departamento.
+     */
+    public function iva()
+    {
+        return $this->belongsTo(Iva::class, 'iva', 'codigo');
+    }
 }
